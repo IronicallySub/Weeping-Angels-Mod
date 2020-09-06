@@ -32,8 +32,8 @@ public class PlinthTile extends TileEntity implements ITickableTileEntity {
 	}
 	
 	@Override
-	public void read(BlockState state, CompoundNBT compound) {
-		super.read(state, compound);
+	public void read(CompoundNBT compound) {
+		super.read(compound);
 		setHasSpawned(compound.getBoolean("hasSpawned"));
 		setPose(new ResourceLocation(compound.getString("pose")));
 		rotation = compound.getInt("rotation");
@@ -80,7 +80,7 @@ public class PlinthTile extends TileEntity implements ITickableTileEntity {
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		handleUpdateTag(getBlockState(), pkt.getNbtCompound());
+		handleUpdateTag(pkt.getNbtCompound());
 	}
 	
 	@Override
@@ -103,7 +103,7 @@ public class PlinthTile extends TileEntity implements ITickableTileEntity {
 			if (!plinth.getHasSpawned()) {
 				WeepingAngelEntity angel = new WeepingAngelEntity(world);
 				angel.setType(type);
-				angel.setChild(false);
+				angel.setCherub(false);
 				angel.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, 0, 0);
 				angel.setPose(getPose());
 				world.addEntity(angel);

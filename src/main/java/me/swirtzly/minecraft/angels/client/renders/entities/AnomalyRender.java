@@ -27,10 +27,6 @@ public class AnomalyRender extends MobRenderer<AnomalyEntity, EntityModel<Anomal
 		matrixStackIn.push();
 		ActiveRenderInfo activerenderinfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
 		matrixStackIn.rotate(activerenderinfo.getRotation());
-
-		for(int i = 0; i < 2; ++i) {
-			entityIn.world.addParticle(ParticleTypes.CRIMSON_SPORE, entityIn.getPosXRandom(0.5D), entityIn.getPosYRandom(), entityIn.getPosZRandom(0.5D), 0.0D, 0.0D, 0.0D);
-		}
 		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 		matrixStackIn.pop();
 	}

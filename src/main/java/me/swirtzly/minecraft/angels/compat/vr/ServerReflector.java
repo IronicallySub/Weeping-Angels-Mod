@@ -2,7 +2,7 @@ package me.swirtzly.minecraft.angels.compat.vr;
 
 import me.swirtzly.minecraft.angels.WeepingAngels;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -108,7 +108,7 @@ public class ServerReflector extends VivecraftReflector {
                 Class<?> cQuaternion = Class.forName("com.techjar.vivecraftforge.util.Quaternion");
 
                 conQuaternion = cQuaternion.getConstructor(float.class,float.class,float.class,float.class);
-                mVecMultiply = cQuaternion.getMethod("multiply", Vector3d.class);
+                mVecMultiply = cQuaternion.getMethod("multiply", Vec3d.class);
 
                 WeepingAngels.LOGGER.info("Vivecraft Forge Extensions detected! Enabling compatability features.");
             }catch (Exception e)
@@ -159,14 +159,14 @@ public class ServerReflector extends VivecraftReflector {
      * @return The position
      */
     @Override
-    public Vector3d getHMDPos(PlayerEntity player) {
+    public Vec3d getHMDPos(PlayerEntity player) {
         try {
             if(enabled==0) {
                 UUID uuid = player.getUniqueID();
                 //Network Character - attempt to get from NetworkHelper
                 Map<UUID,?> vivePlayers = (Map<UUID,? extends Object>)fVivePlayers.get(null);
                 Object vivePlayer = vivePlayers.get(uuid);
-                return (Vector3d) mGetHMDPos.invoke(vivePlayer);
+                return (Vec3d) mGetHMDPos.invoke(vivePlayer);
             }
             else if(enabled==1)
             {
@@ -176,7 +176,7 @@ public class ServerReflector extends VivecraftReflector {
                 float Y = fPosY.getFloat(playerHead);
                 float Z = fPosZ.getFloat(playerHead);
 
-                return new Vector3d(X, Y, Z);
+                return new Vec3d(X, Y, Z);
             }
 
         } catch (Exception e) {
@@ -193,14 +193,14 @@ public class ServerReflector extends VivecraftReflector {
      * @return The direction vector
      */
     @Override
-    public Vector3d getHMDRot(PlayerEntity player) {
+    public Vec3d getHMDRot(PlayerEntity player) {
         try {
             UUID uuid = player.getUniqueID();
             if (enabled == 0) {
                 //Network Character - attempt to get from NetworkHelper
                 Map<UUID, ?> vivePlayers = (Map<UUID, ? extends Object>) fVivePlayers.get(null);
                 Object vivePlayer = vivePlayers.get(uuid);
-                return (Vector3d) mGetHMDDir.invoke(vivePlayer);
+                return (Vec3d) mGetHMDDir.invoke(vivePlayer);
             } else if (enabled == 1) {
                 Object playerHead = fHead.get(mGetPlayerData.invoke(null, player));
 
@@ -213,7 +213,7 @@ public class ServerReflector extends VivecraftReflector {
 
                 //mNormalize.invoke(quaternion);
 
-                return (Vector3d) mVecMultiply.invoke(quaternion, new Vector3d(0, 0, -1));
+                return (Vec3d) mVecMultiply.invoke(quaternion, new Vec3d(0, 0, -1));
             }
         } catch (Exception e) {
             WeepingAngels.LOGGER.warn("Vivecraft Server: Unknown Error Parsing getHMDRot", e);

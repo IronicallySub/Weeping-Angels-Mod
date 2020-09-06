@@ -8,7 +8,6 @@ import me.swirtzly.minecraft.angels.client.renders.tileentities.PlinthTileRender
 import me.swirtzly.minecraft.angels.client.renders.tileentities.SnowArmTileRender;
 import me.swirtzly.minecraft.angels.client.renders.tileentities.StatueRender;
 import me.swirtzly.minecraft.angels.common.WAObjects;
-import me.swirtzly.minecraft.angels.common.entities.AngelEnums;
 import me.swirtzly.minecraft.angels.common.entities.WeepingAngelEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -16,8 +15,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -73,14 +70,6 @@ public class ClientUtil {
 		RenderTypeLookup.setRenderLayer(WAObjects.Blocks.PLINTH.get(), RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(WAObjects.Blocks.STATUE.get(), RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(WAObjects.Blocks.KONTRON_ORE.get(), RenderType.getCutout());
-
-		ItemModelsProperties.func_239418_a_(WAObjects.Items.TIMEY_WIMEY_DETECTOR.get(), new ResourceLocation("angle"), (itemStack, clientWorld, livingEntity) -> {
-			if (clientWorld != null) {
-				return clientWorld.rand.nextInt(17);
-			}
-			return 0;
-		});
-	
 	}
 
 }

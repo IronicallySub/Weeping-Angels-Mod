@@ -8,9 +8,8 @@ import me.swirtzly.minecraft.angels.network.messages.MessageSFX;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
@@ -38,7 +37,7 @@ public class WATeleporter {
 		
 		for (ServerWorld dimension : dimensions) {
 			for (String dimName : WAConfig.CONFIG.notAllowedDimensions.get()) {
-				if (dimension.getDimensionKey().func_240901_a_().toString().equalsIgnoreCase(dimName) || dimension.getDimensionKey().func_240901_a_().toString().contains("tardis")) {
+				if (dimension.getDimension().getType().getRegistryName().toString().equalsIgnoreCase(dimName) || dimension.getDimension().getType().getRegistryName().toString().contains("tardis")) {
 					allowedDimensions.remove(dimension);
 				}
 			}
@@ -48,9 +47,9 @@ public class WATeleporter {
 	
 	public static boolean handleStructures(ServerPlayerEntity player) {
 
-		Structure[] targetStructure = null;
+		String[] targetStructure = null;
 
-		switch (player.world.getDimensionKey().getRegistryName().toString()) {
+		switch (player.world.getDimension().getType().getRegistryName().toString()) {
 			case "minecraft:overworld":
 				targetStructure = AngelUtils.OVERWORLD_STRUCTURES;
 				break;
@@ -58,7 +57,7 @@ public class WATeleporter {
 			case "minecraft:end":
 				targetStructure = AngelUtils.END_STRUCTURES;
 				break;
-			
+
 			case "minecraft:nether":
 				targetStructure = AngelUtils.NETHER_STRUCTURES;
 				break;
@@ -66,7 +65,7 @@ public class WATeleporter {
 		
 		if (targetStructure != null) {
 			ServerWorld serverWorld = (ServerWorld) player.world;
-			BlockPos bPos = serverWorld.func_241117_a_(targetStructure[player.world.rand.nextInt(targetStructure.length)], player.getPosition(), Integer.MAX_VALUE, false);
+			BlockPos bPos = serverWorld.findNearestStructure(targetStructure[player.world.rand.nextInt(targetStructure.length)], player.getPosition(), Integer.MAX_VALUE, false);
 			if (bPos != null) {
 				teleportPlayerTo(player, bPos, player.getServerWorld());
 				return true;
@@ -82,7 +81,7 @@ public class WATeleporter {
 
 
 	public static boolean isPosBelowOrAboveWorld(World dim, int y) {
-		if (dim.getDimensionKey().func_240901_a_().equals(DimensionType.THE_NETHER.getRegistryName())) {
+		if (dim.getDimension().getType().equals(DimensionType.THE_NETHER.getRegistryName())) {
 			return y <= 0 || y >= 126;
 		}
 		return y <= 0 || y >= 256;

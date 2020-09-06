@@ -1,16 +1,11 @@
 package me.swirtzly.minecraft.angels.utils;
 
-import java.util.Random;
-
 import me.swirtzly.minecraft.angels.WeepingAngels;
 import me.swirtzly.minecraft.angels.common.WAObjects;
 import me.swirtzly.minecraft.angels.common.entities.AngelEnums;
 import me.swirtzly.minecraft.angels.common.entities.QuantumLockBaseEntity;
 import me.swirtzly.minecraft.angels.common.entities.WeepingAngelEntity;
-import me.swirtzly.minecraft.angels.data.WAItemTags;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -20,60 +15,39 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.functions.ILootFunction;
 import net.minecraft.network.play.server.SSpawnParticlePacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
-import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameterSets;
+import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.functions.ILootFunction;
+
+import java.util.Random;
 
 public class AngelUtils {
 
-    public static final ITag.INamedTag<Item> KEYS = makeItem(WeepingAngels.MODID, "angel_theft");
-    public static final ITag.INamedTag<Item> HELD_LIGHT_ITEMS = makeItem(WeepingAngels.MODID, "held_light_items");
+    public static final Tag<Item> KEYS = makeItem(WeepingAngels.MODID, "angel_theft");
+    public static final Tag<Item> HELD_LIGHT_ITEMS = makeItem(WeepingAngels.MODID, "held_light_items");
 
-    public static ITag.INamedTag<Item> makeItem(String domain, String path) {
-        return ItemTags.createOptional(new ResourceLocation(domain, path));
+    public static Tag<Item> makeItem(String domain, String path) {
+        return new ItemTags.Wrapper(new ResourceLocation(domain, path));
     }
 
 
-    public static Structure[] END_STRUCTURES = new Structure[]{Structure.field_236379_o_};
-    public static Structure[] OVERWORLD_STRUCTURES = new Structure[]{
-
-            Structure.field_236366_b_,
-            Structure.field_236367_c_,
-            Structure.field_236368_d_,
-            Structure.field_236369_e_,
-            Structure.field_236370_f_,
-            Structure.field_236371_g_,
-            Structure.field_236372_h_,
-            Structure.field_236373_i_,
-            Structure.field_236374_j_,
-            Structure.field_236375_k_,
-            Structure.field_236376_l_,
-            Structure.field_236377_m_,
-            Structure.field_236380_p_,
-            Structure.field_236381_q_
-    };
-
-    public static Structure[] NETHER_STRUCTURES = new Structure[]{Structure.field_236383_s_, Structure.field_236382_r_, Structure.field_236378_n_};
+    public static String[] END_STRUCTURES = new String[]{"EndCity",};
+    public static String[] OVERWORLD_STRUCTURES = new String[]{"Ocean_Ruin", "Pillager_Outpost", "Mineshaft", "Mansion", "Igloo", "Desert_Pyramid", "Jungle_Pyramid", "Swamp_Hut", "Stronghold", "Monument", "Shipwreck", "Village"};
+    public static String[] NETHER_STRUCTURES = new String[]{"Fortress"};
     public static Random RAND = new Random();
 
     /**
@@ -164,10 +138,10 @@ public class AngelUtils {
     public static int getFortuneModifier(LivingEntity entityIn) {
         return EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FORTUNE, entityIn);
     }
-
+/*
     public static LootFunctionType registerFunction(ResourceLocation resourceLocation, ILootSerializer<? extends ILootFunction> serialiser) {
         return Registry.register(Registry.LOOT_FUNCTION_TYPE, resourceLocation, new LootFunctionType(serialiser));
-     }
+     }*/
     
     public static void dropEntityLoot(Entity target, PlayerEntity attacker) {
         LivingEntity targeted = (LivingEntity) target;
@@ -179,7 +153,7 @@ public class AngelUtils {
     }
 
     public static LootContext.Builder getLootContextBuilder(boolean p_213363_1_, DamageSource damageSourceIn, LivingEntity entity, PlayerEntity attacker) {
-        LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) entity.world)).withRandom(entity.world.rand).withParameter(LootParameters.THIS_ENTITY, entity).withParameter(LootParameters.field_237457_g_, entity.getPositionVec()).withParameter(LootParameters.DAMAGE_SOURCE, damageSourceIn).withNullableParameter(LootParameters.KILLER_ENTITY, damageSourceIn.getTrueSource()).withNullableParameter(LootParameters.DIRECT_KILLER_ENTITY, damageSourceIn.getImmediateSource());
+        LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) entity.world)).withRandom(entity.world.rand).withParameter(LootParameters.THIS_ENTITY, entity).withParameter(LootParameters.POSITION, entity.getPosition()).withParameter(LootParameters.DAMAGE_SOURCE, damageSourceIn).withNullableParameter(LootParameters.KILLER_ENTITY, damageSourceIn.getTrueSource()).withNullableParameter(LootParameters.DIRECT_KILLER_ENTITY, damageSourceIn.getImmediateSource());
         if (p_213363_1_ && entity.getAttackingEntity() != null) {
             attacker = (PlayerEntity) entity.getAttackingEntity();
             lootcontext$builder = lootcontext$builder.withParameter(LootParameters.LAST_DAMAGE_PLAYER, attacker).withLuck(attacker.getLuck());

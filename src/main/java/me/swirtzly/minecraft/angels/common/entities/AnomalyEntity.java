@@ -1,26 +1,18 @@
 package me.swirtzly.minecraft.angels.common.entities;
 
 import me.swirtzly.minecraft.angels.common.WAObjects;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.Iterator;
 
 public class AnomalyEntity extends MobEntity {
 	
@@ -65,7 +57,7 @@ public class AnomalyEntity extends MobEntity {
 		if(!world.isRemote) {
 			for (WeepingAngelEntity weepingAngelEntity : world.getEntitiesWithinAABB(WeepingAngelEntity.class, getBoundingBox().grow(10))) {
 				BlockPos pos = getPosition().subtract(weepingAngelEntity.getPosition());
-				Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
+				Vec3d vec = new Vec3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
 				weepingAngelEntity.setNoAI(false);
 				weepingAngelEntity.setMotion(vec.scale(0.25D));
 			}

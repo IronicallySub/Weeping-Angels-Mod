@@ -1,27 +1,27 @@
 modLoader="javafml"
-loaderVersion="[24,)"
+loaderVersion="[31,)"
 issueTrackerURL="https://github.com/Swirtzly/Weeping-Angels/issues"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/weeping-angels-mod"
 logoFile="logo.png"
 credits="Ed, Ford, Myself, Rolf, Nictogen, Lukas, ShadowBolt"
 authors="Swirtzly"
-license="https://github.com/WhoCraft/Weeping-Angels/blob/1.14/LICENSE"
+license="https://github.com/WhoCraft/Weeping-Angels/blob/1.15.2/LICENSE"
 [[mods]]
 modId="weeping_angels"
 version="1.0.1"
 displayName="Weeping Angels"
-updateJSONURL="https://raw.githubusercontent.com/WhoCraft/Weeping-Angels/1.16.2/update.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/WhoCraft/Weeping-Angels/1.15.2/update.json" #optional
 description='''
 Mod that adds the terrifying Weeping Angel creatures to Minecraft || Originally made for ModJam 5'''
 [[dependencies.weeping_angels]]
     modId="forge"
     mandatory=true
-    versionRange="[28,)"
+    versionRange="[31,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.weeping_angels]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2]"
+    versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"

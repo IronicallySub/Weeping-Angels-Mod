@@ -36,7 +36,7 @@ public class AngelSpawnerItem<E extends WeepingAngelEntity> extends Item {
 		if (!worldIn.isRemote) {
 			WeepingAngelEntity angel = WAObjects.EntityEntries.WEEPING_ANGEL.get().create(worldIn);
 			angel.setType(type.getId());
-			angel.setChild(type.isChild());
+			angel.setCherub(type.isChild());
 			angel.setPosition(pos.getX(), pos.getY() + 1, pos.getZ());
 			angel.faceEntity(player, 10.0F, 10.0F);
 			player.getHeldItem(hand).shrink(1);

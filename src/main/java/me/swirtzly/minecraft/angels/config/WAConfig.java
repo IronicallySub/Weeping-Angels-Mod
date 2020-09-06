@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
@@ -91,7 +92,7 @@ public class WAConfig {
         builder.pop();
         builder.push("teleport");
         teleportType = builder.translation("config.weeping_angels.teleport_enabled").comment("Teleport type, Acceptable entries: RANDOM_PLACE, DONT, STRUCTURES").defineInList("teleportType", "RANDOM_PLACE", Arrays.asList("RANDOM_PLACE", "DONT", "STRUCTURES"));
-        notAllowedDimensions = builder.translation("config.weeping_angels.disallowed_dimensions").comment("Note: This a list of dimensions that angels should NOT teleport you to.").defineList("notAllowedDimensions", Lists.newArrayList(DimensionType.field_242712_c.toString()), String.class::isInstance);
+        notAllowedDimensions = builder.translation("config.weeping_angels.disallowed_dimensions").comment("Note: This a list of dimensions that angels should NOT teleport you to.").defineList("notAllowedDimensions", Lists.newArrayList(DimensionType.THE_END.toString()), String.class::isInstance);
         justTeleport = builder.translation("config.weeping_angels.teleport_instant").comment("just teleport. no damage.").define("justTeleport", false);
         teleportRange = builder.translation("config.weeping_angels.teleportRange").comment("The maximum range a user can be teleported by the Angels").defineInRange("teleportRange", 450, 1, Integer.MAX_VALUE);
         angelDimTeleport = builder.translation("config.weeping_angels.angeldimteleport").comment("If this is enabled, angel teleporting can also tp the player to other dimensions").define("angelDimTeleport", true);
@@ -100,14 +101,14 @@ public class WAConfig {
 
     public ArrayList<String> genBiomesForSpawn() {
         ArrayList<String> BIOMES = new ArrayList<>();
-        BIOMES.add(Biomes.TAIGA_HILLS.func_240901_a_().toString());
-        BIOMES.add(Biomes.TAIGA.func_240901_a_().toString());
-        BIOMES.add(Biomes.DESERT.func_240901_a_().toString());
-        BIOMES.add(Biomes.DESERT_HILLS.func_240901_a_().toString());
-        BIOMES.add(Biomes.PLAINS.func_240901_a_().toString());
-        BIOMES.add(Biomes.SWAMP.func_240901_a_().toString());
-        BIOMES.add(Biomes.BEACH.func_240901_a_().toString());
-        BIOMES.add(Biomes.SNOWY_TAIGA.func_240901_a_().toString());
+        BIOMES.add(Biomes.TAIGA_HILLS.getRegistryName().toString());
+        BIOMES.add(Biomes.TAIGA.getRegistryName().toString());
+        BIOMES.add(Biomes.DESERT.getRegistryName().toString());
+        BIOMES.add(Biomes.DESERT_HILLS.getRegistryName().toString());
+        BIOMES.add(Biomes.PLAINS.getRegistryName().toString());
+        BIOMES.add(Biomes.SWAMP.getRegistryName().toString());
+        BIOMES.add(Biomes.BEACH.getRegistryName().toString());
+        BIOMES.add(Biomes.SNOWY_TAIGA.getRegistryName().toString());
         return BIOMES;
 	}
 }

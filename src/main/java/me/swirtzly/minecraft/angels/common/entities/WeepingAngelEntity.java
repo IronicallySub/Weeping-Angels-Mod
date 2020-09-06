@@ -6,17 +6,13 @@ import me.swirtzly.minecraft.angels.common.WAObjects;
 import me.swirtzly.minecraft.angels.common.misc.WAConstants;
 import me.swirtzly.minecraft.angels.config.WAConfig;
 import me.swirtzly.minecraft.angels.utils.AngelUtils;
-import me.swirtzly.minecraft.angels.utils.ViewUtil;
 import me.swirtzly.minecraft.angels.utils.WATeleporter;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.BreakDoorGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -32,11 +28,9 @@ import net.minecraft.util.concurrent.TickDelayedTask;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.*;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.IWorldInfo;
+import net.minecraft.world.storage.WorldInfo;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -86,21 +80,31 @@ public class WeepingAngelEntity extends QuantumLockBaseEntity {
 
 	@Nullable
 	@Override
-	public ILivingEntityData onInitialSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
+	public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
 		playSound(WAObjects.Sounds.ANGEL_AMBIENT.get(), 0.5F, 1.0F);
-		return super.onInitialSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+	}
+
+	@Override
+	protected void registerAttributes() {
+		super.registerAttributes();
+		this.getAttributes().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(WAConfig.CONFIG.damage.get());
+		this.getAttributes().getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50D);
+		this.getAttributes().getAttributeInstance(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(9999999.0D);
+		this.getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(WAConfig.CONFIG.moveSpeed.get());
+		this.getAttributes().getAttributeInstance(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
 		return SoundEvents.BLOCK_STONE_HIT;
 	}
-	
+
 	@Override
 	protected SoundEvent getDeathSound() {
 		return WAObjects.Sounds.ANGEL_DEATH.get();
 	}
-	
+
 	@Override
 	protected SoundEvent getAmbientSound() {
 		if (isCherub() && ticksExisted % AngelUtils.secondsToTicks(2) == 0) {
@@ -112,16 +116,6 @@ public class WeepingAngelEntity extends QuantumLockBaseEntity {
 	@Override
 	public float getEyeHeight(Pose p_213307_1_) {
 		return isCherub() ? getHeight() : 1.3F;
-	}
-
-
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MonsterEntity.func_234295_eP_().
-				createMutableAttribute(Attributes.ATTACK_DAMAGE, WAConfig.CONFIG.damage.get()).
-				createMutableAttribute(Attributes.MAX_HEALTH, 50D).
-				createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 9999999.0D).
-				createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23000000417232513D).
-				createMutableAttribute(Attributes.ARMOR, 2.0D);
 	}
 
 
@@ -422,7 +416,7 @@ public class WeepingAngelEntity extends QuantumLockBaseEntity {
 					BlockPos blockPos = new BlockPos(x, yCoordSanity(teleportWorld, new BlockPos(x, 0, z)), z);
 
 					if (AngelUtils.isOutsideOfBorder(world, blockPos)) {
-						IWorldInfo worldInfo = world.getWorldInfo();
+						WorldInfo worldInfo = world.getWorldInfo();
 						blockPos = new BlockPos(worldInfo.getSpawnX() + 12, worldInfo.getSpawnY(), worldInfo.getSpawnZ() + 12);
 						blockPos = new BlockPos(blockPos.getX(), yCoordSanity(world, blockPos), blockPos.getZ());
 						WeepingAngels.LOGGER.error("Weeping Angel Attempted to Teleport [" + player.getName().getUnformattedComponentText() + "] outside the world border! Correcting!");

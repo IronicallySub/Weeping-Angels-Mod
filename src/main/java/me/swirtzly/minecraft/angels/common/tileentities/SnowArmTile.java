@@ -23,7 +23,7 @@ public class SnowArmTile extends TileEntity implements ITickableTileEntity {
 	public void tick() {
 		if (!world.getEntitiesWithinAABB(PlayerEntity.class, AABB.offset(getPos())).isEmpty() && !world.isRemote) {
 			WeepingAngelEntity angel = new WeepingAngelEntity(world);
-			angel.setChild(false);
+			angel.setCherub(false);
 			BlockPos newPos = getPos();
 			angel.setPosition(newPos.getX() + 0.5D, newPos.getY(), newPos.getZ() + 0.5D);
 			world.addEntity(angel);

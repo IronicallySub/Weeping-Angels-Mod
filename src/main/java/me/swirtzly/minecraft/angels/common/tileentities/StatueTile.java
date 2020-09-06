@@ -32,8 +32,8 @@ public class StatueTile extends TileEntity implements ITickableTileEntity {
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT compound) {
-		super.read(state, compound);
+	public void read(CompoundNBT compound) {
+		super.read(compound);
 		setPose(new ResourceLocation(compound.getString("pose")));
 		setRotation(compound.getInt("rotation"));
 		type = compound.getInt("type");
@@ -87,7 +87,7 @@ public class StatueTile extends TileEntity implements ITickableTileEntity {
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		handleUpdateTag(getBlockState(), pkt.getNbtCompound());
+		handleUpdateTag(pkt.getNbtCompound());
 	}
 
 

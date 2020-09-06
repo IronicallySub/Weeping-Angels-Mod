@@ -1,11 +1,11 @@
 package me.swirtzly.minecraft.angels;
 
 import me.swirtzly.minecraft.angels.compat.vr.ServerReflector;
+import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import me.swirtzly.minecraft.angels.common.WAObjects;
-import me.swirtzly.minecraft.angels.common.entities.WeepingAngelEntity;
 import me.swirtzly.minecraft.angels.config.WAConfig;
 import me.swirtzly.minecraft.angels.data.LangEnglish;
 import me.swirtzly.minecraft.angels.data.WABlockTags;
@@ -14,7 +14,6 @@ import me.swirtzly.minecraft.angels.network.Network;
 import me.swirtzly.minecraft.angels.utils.AngelUtils;
 import me.swirtzly.minecraft.angels.utils.ClientUtil;
 import me.swirtzly.minecraft.angels.utils.FortuneEnchantBonus;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -62,10 +61,7 @@ public class WeepingAngels {
 	
 	private void setup(final FMLCommonSetupEvent event) {
 		Network.init();
-		GlobalEntityTypeAttributes.put(WAObjects.EntityEntries.WEEPING_ANGEL.get(), WeepingAngelEntity.createAttributes().create());
-		GlobalEntityTypeAttributes.put(WAObjects.EntityEntries.ANOMALY.get(), WeepingAngelEntity.createAttributes().create());
-		AngelUtils.registerFunction(new ResourceLocation(MODID,"fortune_enchant"), new FortuneEnchantBonus.Serializer()); //registerFunction
-
+		LootFunctionManager.registerFunction(new FortuneEnchantBonus.Serializer());
 		reflector.init();
 
 	}
@@ -76,7 +72,7 @@ public class WeepingAngels {
 
 	@SubscribeEvent
 	public void gatherData(GatherDataEvent e) {
-		e.getGenerator().addProvider(new WAItemTags(e.getGenerator(), new WABlockTags(e.getGenerator())));
+		e.getGenerator().addProvider(new WAItemTags(e.getGenerator()));
 		e.getGenerator().addProvider(new WABlockTags(e.getGenerator()));
 		e.getGenerator().addProvider(new LangEnglish(e.getGenerator()));
 	}

@@ -15,7 +15,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -65,8 +65,8 @@ public class QuantumLockBaseEntity extends MonsterEntity implements IMob {
 					}
 				}
 
-				Vector3d vecPos = getPositionVec();
-				Vector3d vecPlayerPos = targetPlayer.getPositionVec();
+				Vec3d vecPos = getPositionVec();
+				Vec3d vecPlayerPos = targetPlayer.getPositionVec();
 				float angle = (float) Math.toDegrees((float) Math.atan2(vecPos.z - vecPlayerPos.z, vecPos.x - vecPlayerPos.x));
 				rotationYawHead = rotationYaw = angle > 180 ? angle : angle + 90;
 				if (isSeen()) return;
@@ -144,7 +144,7 @@ public class QuantumLockBaseEntity extends MonsterEntity implements IMob {
 		setNoAI(true);
 		getLookController().setLookPositionWithEntity(player, 30, 30);
 		getNavigator().setPath(null, 0);
-		setMotion(new Vector3d(0, 0, 0));
+		setMotion(new Vec3d(0, 0, 0));
 	}
 
 	public BlockPos getPosition(){

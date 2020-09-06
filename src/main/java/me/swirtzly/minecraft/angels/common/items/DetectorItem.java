@@ -33,6 +33,12 @@ public class DetectorItem extends Item {
 	
 	public DetectorItem() {
 		super(new Properties().group(WATabs.MAIN_TAB).maxStackSize(1));
+		addPropertyOverride(new ResourceLocation("angle"), (IItemPropertyGetter) (p_call_1_, p_call_2_, p_call_3_) -> {
+			if (p_call_2_ != null) {
+				return p_call_2_.rand.nextInt(17);
+			}
+			return 0;
+		});
 	}
 
 	@Override

@@ -1,8 +1,5 @@
 package me.swirtzly.minecraft.angels.common.misc;
 
-import me.swirtzly.minecraft.angels.common.WAObjects;
-import net.minecraft.item.ItemModelsProperties;
-
 public class WAConstants {
 	
 	// Angel

@@ -17,21 +17,15 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class ViewUtil {
 	
 	public static boolean isInFrontOfEntity(LivingEntity entity, Entity target, boolean vr) {
-		Vector3d vecTargetsPos = target.getPositionVec();
-		Vector3d vecLook;
+		Vec3d vecTargetsPos = target.getPositionVec();
+		Vec3d vecLook;
 
 		if (vr) {
 			if (entity instanceof PlayerEntity) {
@@ -42,8 +36,8 @@ public class ViewUtil {
 		} else {
 			vecLook = entity.getLookVec();
 		}
-		Vector3d vecFinal = vecTargetsPos.subtractReverse(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())).normalize();
-		vecFinal = new Vector3d(vecFinal.x, 0.0D, vecFinal.z);
+		Vec3d vecFinal = vecTargetsPos.subtractReverse(new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())).normalize();
+		vecFinal = new Vec3d(vecFinal.x, 0.0D, vecFinal.z);
 		return vecFinal.dotProduct(vecLook) < 0.0;
 	}
 	
@@ -121,14 +115,14 @@ public class ViewUtil {
 	public static boolean viewBlocked(LivingEntity viewer, LivingEntity angel) {
 		AxisAlignedBB viewerBoundBox = viewer.getBoundingBox();
 		AxisAlignedBB angelBoundingBox = angel.getBoundingBox();
-		Vector3d[] viewerPoints = { new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.minZ), };
+		Vec3d[] viewerPoints = { new Vec3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.minZ), new Vec3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vec3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.minZ), };
 
 		if (viewer instanceof PlayerEntity) {
-			Vector3d pos;
+			Vec3d pos;
 			if (WeepingAngels.reflector.isVRPlayer((PlayerEntity) viewer))
 				pos = WeepingAngels.reflector.getHMDPos((PlayerEntity) viewer);
 			else
-				pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
+				pos = new Vec3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
 			viewerPoints[0] = pos.add(-headSize, -headSize, -headSize);
 			viewerPoints[1] = pos.add(-headSize, -headSize, headSize);
 			viewerPoints[2] = pos.add(-headSize, headSize, -headSize);
@@ -140,7 +134,7 @@ public class ViewUtil {
 		}
 
 
-		Vector3d[] angelPoints = { new Vector3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.minZ), new Vector3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vector3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.minZ), };
+		Vec3d[] angelPoints = { new Vec3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.minZ), new Vec3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.minZ), };
 
 		for (int i = 0; i < viewerPoints.length; i++) {
 			if (viewer.world.rayTraceBlocks(new RayTraceContext(viewerPoints[i], angelPoints[i], RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, viewer)).getType() == RayTraceResult.Type.MISS) {
@@ -164,14 +158,14 @@ public class ViewUtil {
 	public static boolean viewBlocked(LivingEntity viewer, BlockState blockState, BlockPos blockPos) {
 		AxisAlignedBB viewerBoundBox = viewer.getBoundingBox();
 		AxisAlignedBB angelBoundingBox = blockState.getShape(viewer.world, blockPos).getBoundingBox();
-		Vector3d[] viewerPoints = { new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.minZ), };
+		Vec3d[] viewerPoints = { new Vec3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.minZ), new Vec3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vec3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vec3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.minZ), };
 
 		if (viewer instanceof PlayerEntity) {
-			Vector3d pos;
+			Vec3d pos;
 			if (WeepingAngels.reflector.isVRPlayer((PlayerEntity) viewer))
 				pos = WeepingAngels.reflector.getHMDPos((PlayerEntity) viewer);
 			else
-				pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
+				pos = new Vec3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
 			viewerPoints[0] = pos.add(-headSize, -headSize, -headSize);
 			viewerPoints[1] = pos.add(-headSize, -headSize, headSize);
 			viewerPoints[2] = pos.add(-headSize, headSize, -headSize);
@@ -183,7 +177,7 @@ public class ViewUtil {
 		}
 
 
-		Vector3d[] angelPoints = { new Vector3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.minZ), new Vector3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vector3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vector3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.minZ), };
+		Vec3d[] angelPoints = { new Vec3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.minZ), new Vec3d(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3d(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3d(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.minZ), };
 
 		for (int i = 0; i < viewerPoints.length; i++) {
 			if (viewer.world.rayTraceBlocks(new RayTraceContext(viewerPoints[i], angelPoints[i], RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, viewer)).getType() == RayTraceResult.Type.MISS) {
@@ -199,7 +193,7 @@ public class ViewUtil {
 
 
 	@Nullable
-	private static RayTraceResult rayTraceBlocks(LivingEntity livingEntity, World world, Vector3d vec31, Vector3d vec32, Predicate<BlockPos> stopOn) {
+	private static RayTraceResult rayTraceBlocks(LivingEntity livingEntity, World world, Vec3d vec31, Vec3d vec32, Predicate<BlockPos> stopOn) {
 		if (!Double.isNaN(vec31.x) && !Double.isNaN(vec31.y) && !Double.isNaN(vec31.z)) {
 			if (!Double.isNaN(vec32.x) && !Double.isNaN(vec32.y) && !Double.isNaN(vec32.z)) {
 				int i = MathHelper.floor(vec32.x);
@@ -293,13 +287,13 @@ public class ViewUtil {
 					
 					if (d3 < d4 && d3 < d5) {
 						enumfacing = i > l ? Direction.WEST : Direction.EAST;
-						vec31 = new Vector3d(d0, vec31.y + d7 * d3, vec31.z + d8 * d3);
+						vec31 = new Vec3d(d0, vec31.y + d7 * d3, vec31.z + d8 * d3);
 					} else if (d4 < d5) {
 						enumfacing = j > i1 ? Direction.DOWN : Direction.UP;
-						vec31 = new Vector3d(vec31.x + d6 * d4, d1, vec31.z + d8 * d4);
+						vec31 = new Vec3d(vec31.x + d6 * d4, d1, vec31.z + d8 * d4);
 					} else {
 						enumfacing = k > j1 ? Direction.NORTH : Direction.SOUTH;
-						vec31 = new Vector3d(vec31.x + d6 * d5, vec31.y + d7 * d5, d2);
+						vec31 = new Vec3d(vec31.x + d6 * d5, vec31.y + d7 * d5, d2);
 					}
 					
 					l = MathHelper.floor(vec31.x) - (enumfacing == Direction.EAST ? 1 : 0);
